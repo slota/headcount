@@ -7,7 +7,7 @@ class Csv
     @parse = parse
   end
 
-  def from_csv(path)
+  def self.from_csv(path)
     #   def from_csv(path)
     #     contents = CSV.open(path), headers: true, header_converters: :symbol
     #     contents
@@ -20,10 +20,28 @@ class Csv
 end
 
 class DistrictRepository
+  def self.from_csv(path)
+    reduced_lunch_csv = (CSV.open "../headcount/data/Students qualifying for free or reduced price lunch.csv", headers: true, header_converters: :symbol)
+    district_data = reduced_lunch_csv.map { |row| [row.fetch(:location).upcase, {}]}.to_h
+    DistrictRepository.new(district_data, reduced_lunch_csv)
+  end
 
-  def initialize(districts_data)
+  def initialize(districts_data, reduced_lunch_csv)
+    # Run your tests make sure pass
+    # Change line below to instance variable
+    # Run test
+    # Move instance variable below to initialize
+    # run test
+    # take csv.open and make local variable
+    # run test
+    # move local variable to default parameter
+    # run test
+    # take right hand side of assignment and move it to caller where economicprofile.new happens, that's the caller
+    # run test
+    # repeat process to get above district, which goes into district repository
+    # repeat process to get out of district repo to caller, whoever calls district repo, from_csv...
     @districts_by_name = districts_data.map { |name, district_data|
-    [name.upcase, District.new(name, district_data)]
+      [name.upcase, District.new(name, district_data, reduced_lunch_csv)]
     }.to_h
   end
 
@@ -41,10 +59,9 @@ class District
 
   attr_accessor :economic_profile, :statewide_testing, :economic_profile
 
-  def initialize(name, data)
-    @name              = name
-    binding.pry
-    @economic_profile  = EconomicProfile.new(data[:economic_profile])
+  def initialize(name, data, economic_profile_csv)
+    @name = name
+    @economic_profile  = EconomicProfile.new(data[:economic_profile], economic_profile_csv)
     @statewide_testing = StatewideTesting.new(data[:statewide_testing])
     @enrollment        = Enrollment.new(data[:enrollment])
   end
@@ -52,17 +69,34 @@ class District
 end
 
 class EconomicProfile
-
-  def initialize(data)
+  def initialize(data, stats)
     @data = data
+    @stats = stats
   end
 
   def free_or_reduced_lunch_by_year
+    line = []
+    return_lines = []
+    @stats.each do |columns|
+      district  = columns[:location]
+      poverty   = columns[:poverty_level]
+      stat_year = columns[:timeframe]
+      stat_type = columns[:dataformat]
+      value     = columns[:data]
+      if stat_type == "Percent" && district == "Colorado" && poverty == "Eligible for Free or Reduced Lunch"
+        line << stat_year
+        line << value
+        return_lines << line
+        line = []
+      end
+    end
+    require 'pry'
+    binding.pry
+    return return_lines.to_h
   end
 
-  def free_or_reduced_lunch_in_year(year)
-    stats = CSV.open "/Users/edgarduran/code/projects/headcount/headcount/data/Students qualifying for free or reduced price lunch.csv", headers: true, header_converters: :symbol
-    stats.each do |columns|
+  def free_or_reduced_lunch_in_year(year)  
+    @stats.each do |columns|
       district  = columns[:location]
       poverty   = columns[:poverty_level]
       stat_year = columns[:timeframe]
@@ -74,16 +108,73 @@ class EconomicProfile
     end
   end
 
-  def school_aged_children_in_poverty_in_year
+  def school_aged_children_in_poverty_by_year
+    line = []
+    return_lines = []
+    stats = CSV.open "../headcount/data/School-aged children in poverty.csv", headers: true, header_converters: :symbol
+    stats.each do |columns|
+      district  = columns[:location]
+      stat_year = columns[:timeframe]
+      stat_type = columns[:dataformat]
+      value     = columns[:data]
+      if stat_type == "Percent" && district
+        line << stat_year
+        line << value
+        return_lines << line
+        line = []
+      end
+    end
+    return return_lines.to_h
   end
 
   def school_aged_children_in_poverty_in_year(year)
+    line = []
+    return_lines = []
+    stats = CSV.open "../headcount/data/School-aged children in poverty.csv", headers: true, header_converters: :symbol
+    stats.each do |columns|
+      district  = columns[:location]
+      stat_year = columns[:timeframe]
+      stat_type = columns[:dataformat]
+      value     = columns[:data]
+      if stat_year == year && stat_type == "Percent"
+        return value
+      end
+    end
   end
 
+
   def title_1_students_by_year
+    line = []
+    return_lines = []
+    stats = CSV.open "../headcount/data/Title I students.csv", headers: true, header_converters: :symbol
+    stats.each do |columns|
+      district  = columns[:location]
+      stat_year = columns[:timeframe]
+      stat_type = columns[:dataformat]
+      value     = columns[:data]
+      if stat_type == "Percent" && district
+        line << stat_year
+        line << value
+        return_lines << line
+        line = []
+      end
+    end
+    return return_lines.to_h
   end
 
   def title_1_students_in_year(year)
+    line = []
+    return_lines = []
+    stats = CSV.open "../headcount/data/Title I students.csv", headers: true, header_converters: :symbol
+    stats.each do |columns|
+      district  = columns[:location]
+      stat_year = columns[:timeframe]
+      stat_type = columns[:dataformat]
+      value     = columns[:data]
+      if stat_year == year && stat_type == "Percent"
+        return value
+      end
+    end
   end
 
 end
