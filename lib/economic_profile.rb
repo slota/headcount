@@ -33,7 +33,6 @@ class DistrictRepository
     #   File.open("#{path}/#{f}")
     # end
     district_data = data.map { |row| [row.fetch(:location).upcase, {}]}.to_h
-    binding.pry
     DistrictRepository.new(district_data)
   end
 
@@ -56,6 +55,7 @@ class DistrictRepository
     @districts_by_name = districts_data.map { |name, district_data|
       [name.upcase, District.new(name)]
     }.to_h
+    binding.pry
   end
 
   def find_by_name(name)
@@ -91,7 +91,7 @@ class District
 
   def initialize(name)
     @name = name
-    @economic_profile  = EconomicProfile.new(data[:economic_profile], economic_profile_csv)
+    @economic_profile  = EconomicProfile.new(data[:economic_profile])
     @statewide_testing = StatewideTesting.new(data[:statewide_testing])
     @enrollment        = Enrollment.new(data[:enrollment])
   end
@@ -99,15 +99,16 @@ class District
 end
 
 class EconomicProfile
-  def initialize(data, stats)
+  def initialize(data)
     @data = data
-    @stats = stats
+    # @stats = stats
   end
 
   def free_or_reduced_lunch_by_year
     line = []
     return_lines = []
-    @stats.each do |columns|
+    stats = CSV.open "../headcount/data/Students qualifying for free or reduced price lunch.csv", headers: true, header_converters: :symbol
+    stats.each do |columns|
       district  = columns[:location]
       poverty   = columns[:poverty_level]
       stat_year = columns[:timeframe]
@@ -124,8 +125,8 @@ class EconomicProfile
   end
 
   def free_or_reduced_lunch_in_year(year)
-
-    @stats.each do |columns|
+    stats = CSV.open "../headcount/data/Students qualifying for free or reduced price lunch.csv", headers: true, header_converters: :symbol
+    stats.each do |columns|
       year = year.to_s
       district  = columns[:location]
       poverty   = columns[:poverty_level]
@@ -143,8 +144,11 @@ class EconomicProfile
     return_lines = []
     stats = CSV.open "../headcount/data/School-aged children in poverty.csv", headers: true, header_converters: :symbol
     stats.each do |columns|
-
-      if :dataformat == "Percent"
+      district  = columns[:location]
+      stat_year = columns[:timeframe]
+      stat_type = columns[:dataformat]
+      value     = columns[:data]
+      if stat_type == "Percent"
         line << stat_year
         line << value
         return_lines << line
