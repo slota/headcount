@@ -21,12 +21,23 @@ end
 
 class DistrictRepository
   def self.from_csv(path)
-    reduced_lunch_csv = (CSV.open "../headcount/data/Students qualifying for free or reduced price lunch.csv", headers: true, header_converters: :symbol)
-    district_data = reduced_lunch_csv.map { |row| [row.fetch(:location).upcase, {}]}.to_h
-    DistrictRepository.new(district_data, reduced_lunch_csv)
+    # take in all csv files
+    # separate them
+    # populate district data with the three keys
+    # values will be conglomeration of info from needed files
+    data = (CSV.open "#{path}/Students qualifying for free or reduced price lunch.csv", headers: true, header_converters: :symbol).map(&:to_h)
+    # temp = data.files(pattern="*.csv")
+    # myfiles = lapply(temp, read.delim)
+    # dir = Dir.open(path)
+    # dir.map do |f|
+    #   File.open("#{path}/#{f}")
+    # end
+    district_data = data.map { |row| [row.fetch(:location).upcase, {}]}.to_h
+    binding.pry
+    DistrictRepository.new(district_data)
   end
 
-  def initialize(districts_data, reduced_lunch_csv)
+  def initialize(districts_data)
     # Run your tests make sure pass
     # Change line below to instance variable
     # Run test
@@ -40,8 +51,10 @@ class DistrictRepository
     # run test
     # repeat process to get above district, which goes into district repository
     # repeat process to get out of district repo to caller, whoever calls district repo, from_csv...
+    # call economic profile hash maker
+    # call next two
     @districts_by_name = districts_data.map { |name, district_data|
-      [name.upcase, District.new(name, district_data, reduced_lunch_csv)]
+      [name.upcase, District.new(name)]
     }.to_h
   end
 
@@ -53,13 +66,30 @@ class DistrictRepository
 
   end
 
+  def populate_economic_profile(path)
+    file =(CSV.open path, headers: true, header_converters: :symbol)
+    districts_data.map { |name, district_data|
+      [name.upcase, District.new(name, district_data, reduced_lunch_csv)]
+    }.to_h
+  "Median household income.csv"
+#  School-aged children in poverty.csv
+#  Students qualifying for free or reduced price lunch.csv
+#  Title I students.csv
+  end
+
+  def populate_statewide_testing
+  end
+
+  def populate_enrollment
+  end
+
 end
 
 class District
 
-  attr_accessor :economic_profile, :statewide_testing, :economic_profile
+  attr_accessor :economic_profile, :statewide_testing, :enrollment
 
-  def initialize(name, data, economic_profile_csv)
+  def initialize(name)
     @name = name
     @economic_profile  = EconomicProfile.new(data[:economic_profile], economic_profile_csv)
     @statewide_testing = StatewideTesting.new(data[:statewide_testing])
@@ -90,13 +120,13 @@ class EconomicProfile
         line = []
       end
     end
-    require 'pry'
-    binding.pry
     return return_lines.to_h
   end
 
-  def free_or_reduced_lunch_in_year(year)  
+  def free_or_reduced_lunch_in_year(year)
+
     @stats.each do |columns|
+      year = year.to_s
       district  = columns[:location]
       poverty   = columns[:poverty_level]
       stat_year = columns[:timeframe]
@@ -113,11 +143,8 @@ class EconomicProfile
     return_lines = []
     stats = CSV.open "../headcount/data/School-aged children in poverty.csv", headers: true, header_converters: :symbol
     stats.each do |columns|
-      district  = columns[:location]
-      stat_year = columns[:timeframe]
-      stat_type = columns[:dataformat]
-      value     = columns[:data]
-      if stat_type == "Percent" && district
+
+      if :dataformat == "Percent"
         line << stat_year
         line << value
         return_lines << line
