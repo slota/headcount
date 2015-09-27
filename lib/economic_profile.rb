@@ -332,7 +332,46 @@ class Enrollment
     return line
   end
 
-  def dropout_rate_by_race_in_year(year)
+  def dropout_rate_by_race_in_year(year_input)
+    data = CSV.open "../headcount/data/Dropout rates by race and ethnicity.csv", headers: true, header_converters: :symbol
+    line = {}
+    hash = {}
+    data.each do |columns|
+      district  = columns[:location]
+      category  = columns[:category]
+      year      = columns[:timeframe]
+      stat_type = columns[:dataformat]
+      value     = columns[:data]
+      if district == "Colorado"
+
+        if year == year_input && category == "Asian Students" || year == year_input && category == "Black Students" || year == year_input && category == "Hispanic Students" || year == year_input && category == "Native Hawaiian or Other Pacific Islander" || year == year_input && category == "Native American Students" || year == year_input && category == "Two or More Races" || year == year_input && category == "White Students"
+          if category == "Asian Students"
+            category = category[0..4].downcase
+          elsif
+            category == "Black Students"
+              category = category[0..4].downcase
+          elsif
+            category == "Native Hawaiian or Other Pacific Islander"
+              category = category[25..40].downcase
+          elsif
+            category == "Hispanic Students"
+              category = category[0..7].downcase
+          elsif
+            category == "Native American Students"
+              category = category[0..14].downcase
+          elsif
+            category == "Two or More Races"
+              category = category[0..10].downcase
+          elsif
+            category == "White Students"
+              category = category[0..4].downcase
+          end
+          hash = Hash[category, value]
+          line = line.merge(hash)
+        end
+      end
+    end
+    return line
   end
 
   def dropout_rate_for_race_or_ethnicity(race)

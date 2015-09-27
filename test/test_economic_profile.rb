@@ -84,4 +84,9 @@ class EnrollmentTesting < Minitest::Test
     expected = {"female"=>"0.027", "male"=>"0.032"}
     assert_equal expected, Enrollment.new({lunch_thing: 123}).dropout_rate_by_gender_in_year("2012")
   end
+
+  def test_dropout_rate_by_race_in_year
+    expected = {"asian"=>"0.016", "black"=>"0.044", "hispanic"=>"0.047", "native american"=>"0.054", "pacific islander"=>"0.038", "two or more"=>"0.017", "white"=>"0.019"}
+    assert_equal expected, Enrollment.new({lunch_thing: 123}).dropout_rate_by_race_in_year("2012")
+  end
 end
