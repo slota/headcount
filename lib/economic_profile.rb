@@ -32,8 +32,14 @@ class DistrictRepository
     # dir.map do |f|
     #   File.open("#{path}/#{f}")
     # end
-    district_data = data.map { |row| [row.fetch(:location).upcase, {}]}.to_h
+
+    #
+    district_data = data.group_by do |district|
+      district.fetch(:location)
+    end
+    # district_data = data.map { |row| [row.fetch(:location).upcase, {}]}.to_h
     DistrictRepository.new(district_data)
+
   end
 
   def initialize(districts_data)
@@ -52,13 +58,14 @@ class DistrictRepository
     # repeat process to get out of district repo to caller, whoever calls district repo, from_csv...
     # call economic profile hash maker
     # call next two
+
     @districts_by_name = districts_data.map { |name, district_data|
-      [name.upcase, District.new(name)]
+      [name.upcase, District.new(name, district_data)]
     }.to_h
-    binding.pry
   end
 
   def find_by_name(name)
+    @name = name
     @districts_by_name[name.upcase]
   end
 
@@ -89,16 +96,20 @@ class District
 
   attr_accessor :economic_profile, :statewide_testing, :enrollment
 
-  def initialize(name)
+  def initialize(name, data)
     @name = name
-    @economic_profile  = EconomicProfile.new(data[:economic_profile])
-    @statewide_testing = StatewideTesting.new(data[:statewide_testing])
-    @enrollment        = Enrollment.new(data[:enrollment])
+    @economic_profile  = EconomicProfile.new(data)
+    @statewide_testing = StatewideTesting.new(data)
+    @enrollment        = Enrollment.new(data)
+    #   @economic_profile  = EconomicProfile.new(data[:economic_profile])
+    # @statewide_testing = StatewideTesting.new(data[:statewide_testing])
+    # @enrollment        = Enrollment.new(data[:enrollment])
   end
 
 end
 
 class EconomicProfile
+
   def initialize(data)
     @data = data
     # @stats = stats
@@ -125,16 +136,15 @@ class EconomicProfile
   end
 
   def free_or_reduced_lunch_in_year(year)
-    stats = CSV.open "../headcount/data/Students qualifying for free or reduced price lunch.csv", headers: true, header_converters: :symbol
-    stats.each do |columns|
-      year = year.to_s
+    @data.each do |columns|
+      year      = year.to_s
       district  = columns[:location]
       poverty   = columns[:poverty_level]
       stat_year = columns[:timeframe]
       stat_type = columns[:dataformat]
       value     = columns[:data]
-      if stat_year == year && stat_type == "Percent"
-        return value
+      if stat_year == year && poverty == "Eligible for Free or Reduced Lunch" && stat_type == "Percent"
+        return value.to_f.round(3)
       end
     end
   end
