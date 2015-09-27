@@ -246,17 +246,19 @@ class StatewideTesting
     return return_lines.to_h
   end
 
-  def proficient_by_race_or_ethnicity(race)
-    stats = CSV.open "../headcount/data/3rd grade students scoring proficient or above on the CSAP_TCAP.csv", headers: true, header_converters: :symbol
+  def proficient_by_race_or_ethnicity(race_input)
+    data_math    = CSV.open "../headcount/data/Average proficiency on the CSAP_TCAP by race_ethnicity_Math.csv", headers: true, header_converters: :symbol
+    data_reading = CSV.open "../headcount/data/Average proficiency on the CSAP_TCAP by race_ethnicity_Reading.csv", headers: true, header_converters: :symbol
+    data_writing = CSV.open "../headcount/data/Average proficiency on the CSAP_TCAP by race_ethnicity_Writing.csv", headers: true, header_converters: :symbol
     line = []
     return_lines = []
     stats.each do |columns|
       district  = columns[:location]
-      stat      = columns[:score]
+      race      = columns[:race_ethnicity]
       year      = columns[:timeframe]
       stat_type = columns[:dataformat]
       value     = columns[:data]
-      if stat_type == "Percent" && district == "Colorado"
+      if race_input == "Percent" && district == "Colorado"
         line << year
         line << value
         return_lines << line
@@ -283,10 +285,47 @@ class Enrollment
     @data = data
   end
 
-  def dropout_rate_in_year(year)
+  def dropout_rate_in_year(year_input)
+    data = CSV.open "../headcount/data/Dropout rates by race and ethnicity.csv", headers: true, header_converters: :symbol
+    line = ""
+    data.each do |columns|
+      district  = columns[:location]
+      category  = columns[:category]
+      year      = columns[:timeframe]
+      stat_type = columns[:dataformat]
+      value     = columns[:data]
+      if year == year_input && category == "All Students"
+        line << value
+        return line.to_f
+      end
+    end
   end
 
-  def dropout_rate_by_gender_in_year(year)
+  def dropout_rate_by_gender_in_year(year_input)
+    data = CSV.open "../headcount/data/Dropout rates by race and ethnicity.csv", headers: true, header_converters: :symbol
+    line = {}
+    hash = {}
+    data.each do |columns|
+      district  = columns[:location]
+      category  = columns[:category]
+      year      = columns[:timeframe]
+      stat_type = columns[:dataformat]
+      value     = columns[:data]
+      if district == "Colorado"
+
+        if year == year_input && category == "Female Students" || year == year_input && category == "Male Students"
+          if category == "Female Students"
+            category = category[0..5].downcase
+          elsif
+            category == "Male Students"
+              category = category [0..3].downcase
+          end
+          hash = Hash[category, value]
+          line = line.merge(hash)
+        end
+      end
+    end
+    return line
   end
 
   def dropout_rate_by_race_in_year(year)

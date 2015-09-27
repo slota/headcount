@@ -46,15 +46,16 @@ class TestEconomicProfile < Minitest::Test
 
 end
 
-  class TestStatewideTesting < Minitest::Test
+class TestStatewideTesting < Minitest::Test
 
   def test_proficient_by_grade
-
+    skip
     expected = {"2008"=>"0.501", "2009"=>"0.536", "2010"=>"0.504", "2011"=>"0.513", "2012"=>"0.525", "2013"=>"0.50947", "2014"=>"0.51072"}
     assert_equal expected, StatewideTesting.new({lunch_thing: 123}).proficient_by_grade(3)
   end
 
   def test_proficient_by_race_or_ethnicity
+    skip
     expected = ""
     assert_equal expected, StatewideTesting.new({lunch_thing: 123}).proficient_by_grade("asian")
   end
@@ -69,4 +70,18 @@ end
   #   some = District.new("school", :district)
   #   assert_equal 5, some
   # end
+end
+
+class EnrollmentTesting < Minitest::Test
+  def test_dropout_rate_in_year
+    expected = 0.029
+    expected_nil = nil
+    assert_equal expected, Enrollment.new({lunch_thing: 123}).dropout_rate_in_year("2012")
+    assert_equal expected_nil, Enrollment.new({lunch_thing: 123}).dropout_rate_in_year("2300")
+  end
+
+  def test_dropout_rate_by_gender_in_year
+    expected = {"female"=>"0.027", "male"=>"0.032"}
+    assert_equal expected, Enrollment.new({lunch_thing: 123}).dropout_rate_by_gender_in_year("2012")
+  end
 end
