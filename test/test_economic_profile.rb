@@ -89,4 +89,22 @@ class EnrollmentTesting < Minitest::Test
     expected = {"asian"=>"0.016", "black"=>"0.044", "hispanic"=>"0.047", "native american"=>"0.054", "pacific islander"=>"0.038", "two or more"=>"0.017", "white"=>"0.019"}
     assert_equal expected, Enrollment.new({lunch_thing: 123}).dropout_rate_by_race_in_year("2012")
   end
+
+  def test_dropout_rate_for_race_or_ethnicity
+    skip
+    expected = {"asian"=>"0.016", "black"=>"0.044", "hispanic"=>"0.047", "native american"=>"0.054", "pacific islander"=>"0.038", "two or more"=>"0.017", "white"=>"0.019"}
+    assert_equal expected, Enrollment.new({lunch_thing: 123}).dropout_rate_for_race_or_ethnicity(:asian)
+  end
+
+  def test_dropout_rate_for_race_or_ethnicity_in_year
+    skip
+    expected = {"asian"=>"0.016", "black"=>"0.044", "hispanic"=>"0.047", "native american"=>"0.054", "pacific islander"=>"0.038", "two or more"=>"0.017", "white"=>"0.019"}
+    assert_equal expected, Enrollment.new({lunch_thing: 123}).dropout_rate_for_race_or_ethnicity_in_year(:asian, 2012)
+  end
+
+  def test_graduation_rate_by_year
+    expected = {"2010"=>"0.724", "2011"=>"0.739", "2012"=>"0.75354", "2013"=>"0.769", "2014"=>"0.773"}
+    assert_equal expected, Enrollment.new({lunch_thing: 123}).graduation_rate_by_year
+  end
+
 end

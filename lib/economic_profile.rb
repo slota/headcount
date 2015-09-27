@@ -375,12 +375,44 @@ class Enrollment
   end
 
   def dropout_rate_for_race_or_ethnicity(race)
+    data = CSV.open "../headcount/data/Dropout rates by race and ethnicity.csv", headers: true, header_converters: :symbol
+    line = {}
+    hash = {}
+    data.each do |columns|
+      district  = columns[:location]
+      category  = columns[:category]
+      year      = columns[:timeframe]
+      stat_type = columns[:dataformat]
+      value     = columns[:data]
+      if district == "Colorado"
+        if category == race.to_s.capitalize
+          hash = Hash[year, value]
+          line = line.merge(hash)
+        end
+      end
+    end
+    return line
   end
 
   def dropout_rate_for_race_or_ethnicity_in_year(race, year)
   end
 
   def graduation_rate_by_year
+    data = CSV.open "../headcount/data/High school graduation rates.csv", headers: true, header_converters: :symbol
+    line = {}
+    hash = {}
+    data.each do |columns|
+      district  = columns[:location]
+      year      = columns[:timeframe]
+      stat_type = columns[:dataformat]
+      value     = columns[:data]
+      if district == "Colorado"
+        hash = Hash[year, value]
+        line = line.merge(hash)
+      end
+    end
+    return line
+
   end
 
   def graduation_rate_in_year(year)
