@@ -44,12 +44,17 @@ class TestEconomicProfile < Minitest::Test
     assert_equal '0.216', EconomicProfile.new({lunch_thing: 123}).title_1_students_in_year('2009')
   end
 
+  def test_first
+    path       = File.expand_path("../data", __dir__)
+    repository = DistrictRepository.from_csv(path)
+    district   = repository.find_by_name("ACADEMY 20")
+    assert_equal 0.125, district.economic_profile.free_or_reduced_lunch_in_year(2012)
+  end
 end
 
 class TestStatewideTesting < Minitest::Test
 
   def test_proficient_by_grade
-    skip
     expected = {"2008"=>"0.501", "2009"=>"0.536", "2010"=>"0.504", "2011"=>"0.513", "2012"=>"0.525", "2013"=>"0.50947", "2014"=>"0.51072"}
     assert_equal expected, StatewideTesting.new({lunch_thing: 123}).proficient_by_grade(3)
   end
@@ -60,12 +65,7 @@ class TestStatewideTesting < Minitest::Test
     assert_equal expected, StatewideTesting.new({lunch_thing: 123}).proficient_by_grade("asian")
   end
 
-  def test_first
-    path       = File.expand_path("../data", __dir__)
-    repository = DistrictRepository.from_csv(path)
-    district   = repository.find_by_name("ACADEMY 20")
-    assert_equal 0.125, district.economic_profile.free_or_reduced_lunch_in_year(2012)
-  end#
+
   # def test_district
   #   some = District.new("school", :district)
   #   assert_equal 5, some
