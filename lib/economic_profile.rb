@@ -217,6 +217,23 @@ class StatewideTesting
   end
 
   def proficient_by_grade(grade)
+    stats = CSV.open "../headcount/data/3rd grade students scoring proficient or above on the CSAP_TCAP.csv", headers: true, header_converters: :symbol
+    line = []
+    return_lines = []
+    stats.each do |columns|
+      district  = columns[:location]
+      stat      = columns[:score]
+      year      = columns[:timeframe]
+      stat_type = columns[:dataformat]
+      value     = columns[:data]
+      if stat_type == "Percent" && district == "Colorado"
+        line << year
+        line << value
+        return_lines << line
+        line = []
+      end
+    end
+    return return_lines.to_h
   end
 
   def proficient_by_race_or_ethnicity(race)
