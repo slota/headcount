@@ -448,7 +448,21 @@ class Enrollment
     return line
   end
 
-  def kindergarten_participation_in_year(year)
+  def kindergarten_participation_in_year(year_input)
+    data = CSV.open "../headcount/data/Kindergartners in full-day program.csv", headers: true, header_converters: :symbol
+    line = {}
+    hash = {}
+    data.each do |columns|
+      district  = columns[:location]
+      year      = columns[:timeframe]
+      stat_type = columns[:dataformat]
+      value     = columns[:data]
+
+      if district == "Colorado" && year_input == year
+        line = value
+      end
+    end
+    return line.to_f.round(3)
   end
 
   def online_participation_by_year
