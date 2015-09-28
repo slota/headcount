@@ -1,24 +1,6 @@
 require 'pry'
 require 'csv'
 
-class Csv
-
-  def initialize
-    @parse = parse
-  end
-
-  def self.from_csv(path)
-    #   def from_csv(path)
-    #     contents = CSV.open(path), headers: true, header_converters: :symbol
-    #     contents
-    #   end
-    # end
-    # path       = File.expand_path("../data", __dir__)
-    # repository = DistrictRepository.from_csv(path)
-  end
-
-end
-
 class DistrictRepository
   def self.from_csv(path)
     # take in all csv files
@@ -32,8 +14,6 @@ class DistrictRepository
     # dir.map do |f|
     #   File.open("#{path}/#{f}")
     # end
-
-    #
     district_data = data.group_by do |district|
       district.fetch(:location)
     end
@@ -43,29 +23,16 @@ class DistrictRepository
   end
 
   def initialize(districts_data)
-    # Run your tests make sure pass
-    # Change line below to instance variable
-    # Run test
-    # Move instance variable below to initialize
-    # run test
-    # take csv.open and make local variable
-    # run test
-    # move local variable to default parameter
-    # run test
-    # take right hand side of assignment and move it to caller where economicprofile.new happens, that's the caller
-    # run test
-    # repeat process to get above district, which goes into district repository
-    # repeat process to get out of district repo to caller, whoever calls district repo, from_csv...
-    # call economic profile hash maker
-    # call next two
+    @districts_by_name = clean_up_districts(districts_data)
+  end
 
-    @districts_by_name = districts_data.map { |name, district_data|
+  def clean_up_districts(districts_data)
+    districts_data.map { |name, district_data|
       [name.upcase, District.new(name, district_data)]
     }.to_h
   end
 
   def find_by_name(name)
-    @name = name
     @districts_by_name[name.upcase]
   end
 
@@ -78,7 +45,7 @@ class DistrictRepository
     districts_data.map { |name, district_data|
       [name.upcase, District.new(name, district_data, reduced_lunch_csv)]
     }.to_h
-  "Median household income.csv"
+#  "Median household income.csv"
 #  School-aged children in poverty.csv
 #  Students qualifying for free or reduced price lunch.csv
 #  Title I students.csv
