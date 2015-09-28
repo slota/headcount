@@ -498,7 +498,21 @@ class Enrollment
     return line.to_f.round(3)
   end
 
-  def participation_in_year(year)
+  def participation_by_year
+    data = CSV.open "../headcount/data/Pupil enrollment.csv", headers: true, header_converters: :symbol
+    line = {}
+    hash = {}
+    data.each do |columns|
+      district  = columns[:location]
+      year      = columns[:timeframe]
+      stat_type = columns[:dataformat]
+      value     = columns[:data]
+      if district == "Colorado"
+        hash = Hash[year, value]
+        line = line.merge(hash)
+      end
+    end
+    return line
   end
 
   # def participation_by_race_or_ethnicity(race)
