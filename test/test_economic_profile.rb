@@ -127,5 +127,10 @@ class EnrollmentTesting < Minitest::Test
     assert_equal expected, Enrollment.new({lunch_thing: 123}).online_participation_by_year
   end
 
+  def test_online_participation_in_year
+    expected = 16638.0
+    assert_equal expected, Enrollment.new({lunch_thing: 123}).online_participation_in_year("2012")
+  end
+
 
 end
