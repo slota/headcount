@@ -538,12 +538,40 @@ class Enrollment
   # end
 
   def special_education_by_year
+    data = CSV.open "../headcount/data/Special education.csv", headers: true, header_converters: :symbol
+    line = {}
+    hash = {}
+    data.each do |columns|
+      district  = columns[:location]
+      year      = columns[:timeframe]
+      stat_type = columns[:dataformat]
+      value     = columns[:data]
+      if district == "Colorado"
+        hash = Hash[year, value]
+        line = line.merge(hash)
+      end
+    end
+    return line
   end
 
   def special_education_in_year(year)
   end
 
   def remediation_by_year
+    data = CSV.open "../headcount/data/Remediation in higher education.csv", headers: true, header_converters: :symbol
+    line = {}
+    hash = {}
+    data.each do |columns|
+      district  = columns[:location]
+      year      = columns[:timeframe]
+      stat_type = columns[:dataformat]
+      value     = columns[:data]
+      if district == "Colorado"
+        hash = Hash[year, value]
+        line = line.merge(hash)
+      end
+    end
+    return line
   end
 
   def remediation_in_year(year)

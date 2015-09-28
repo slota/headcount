@@ -142,5 +142,10 @@ class EnrollmentTesting < Minitest::Test
     assert_equal expected, Enrollment.new({lunch_thing: 123}).participation_in_year("2012")
   end
 
+  def test_special_education_by_year
+    expected = {"2009"=>"0.096", "2011"=>"0.097", "2012"=>"0.098", "2013"=>"0.10056", "2010"=>"0.096", "2014"=>"0.10079"}
+    assert_equal expected, Enrollment.new({lunch_thing: 123}).special_education_by_year
+  end
+
 
 end
