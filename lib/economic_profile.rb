@@ -42,7 +42,7 @@ class DistrictRepository
 
   end
 
-  def initialize(districts_data)
+  def initialize(districts_data = self.from_csv)
     # Run your tests make sure pass
     # Change line below to instance variable
     # Run test
@@ -65,24 +65,22 @@ class DistrictRepository
   end
 
   def find_by_name(name)
-    @name = name
     @districts_by_name[name.upcase]
   end
 
   def find_all_matching(name)
-
   end
 
-  def populate_economic_profile(path)
-    file =(CSV.open path, headers: true, header_converters: :symbol)
-    districts_data.map { |name, district_data|
-      [name.upcase, District.new(name, district_data, reduced_lunch_csv)]
-    }.to_h
-  "Median household income.csv"
-#  School-aged children in poverty.csv
-#  Students qualifying for free or reduced price lunch.csv
-#  Title I students.csv
-  end
+#   def populate_economic_profile(path)
+#     file =(CSV.open path, headers: true, header_converters: :symbol)
+#     districts_data.map { |name, district_data|
+#       [name.upcase, District.new(name, district_data, reduced_lunch_csv)]
+#     }.to_h
+#   "Median household income.csv"
+# #  School-aged children in poverty.csv
+# #  Students qualifying for free or reduced price lunch.csv
+# #  Title I students.csv
+#   end
 
   def populate_statewide_testing
   end
@@ -343,7 +341,6 @@ class Enrollment
       stat_type = columns[:dataformat]
       value     = columns[:data]
       if district == "Colorado"
-
         if year == year_input && category == "Asian Students" || year == year_input && category == "Black Students" || year == year_input && category == "Hispanic Students" || year == year_input && category == "Native Hawaiian or Other Pacific Islander" || year == year_input && category == "Native American Students" || year == year_input && category == "Two or More Races" || year == year_input && category == "White Students"
           if category == "Asian Students"
             category = category[0..4].downcase
@@ -378,6 +375,7 @@ class Enrollment
     data = CSV.open "../headcount/data/Dropout rates by race and ethnicity.csv", headers: true, header_converters: :symbol
     line = {}
     hash = {}
+    race = race.to_s
     data.each do |columns|
       district  = columns[:location]
       category  = columns[:category]
@@ -385,7 +383,31 @@ class Enrollment
       stat_type = columns[:dataformat]
       value     = columns[:data]
       if district == "Colorado"
-        if category == race.to_s.capitalize
+        if race == "asian"
+          category_check = "Asian Students"
+        elsif
+          race == "black"
+            category_check = "Black Students"
+        elsif
+          race == "pacific_islander"
+            category_check = "Native Hawaiian or Other Pacific Islander"
+        elsif
+          race == "hispanic"
+            category_check = "Hispanic Students"
+        elsif
+          race == "native_american"
+            category_check = "Native American Students"
+        elsif
+          race == "two_or_more"
+            category_check = "Two or More Races"
+        elsif
+          race == "white"
+            category_check = "White Students"
+        elsif
+          line = "UnknownRaceError"
+          return line
+        end
+        if category_check == category
           hash = Hash[year, value]
           line = line.merge(hash)
         end
@@ -394,7 +416,51 @@ class Enrollment
     return line
   end
 
-  def dropout_rate_for_race_or_ethnicity_in_year(race, year)
+  def dropout_rate_for_race_or_ethnicity_in_year(race, year_input)
+    data = CSV.open "../headcount/data/Dropout rates by race and ethnicity.csv", headers: true, header_converters: :symbol
+    line = {}
+    hash = {}
+    race = race.to_s
+    year_input = year_input.to_s
+    data.each do |columns|
+      district  = columns[:location]
+      category  = columns[:category]
+      year      = columns[:timeframe]
+      stat_type = columns[:dataformat]
+      value     = columns[:data]
+      if district == "Colorado"
+        if race == "asian"
+          category_check = "Asian Students"
+        elsif
+          race == "black"
+            category_check = "Black Students"
+        elsif
+          race == "pacific_islander"
+            category_check = "Native Hawaiian or Other Pacific Islander"
+        elsif
+          race == "hispanic"
+            category_check = "Hispanic Students"
+        elsif
+          race == "native_american"
+            category_check = "Native American Students"
+        elsif
+          race == "two_or_more"
+            category_check = "Two or More Races"
+        elsif
+          race == "white"
+            category_check = "White Students"
+        elsif
+          line = "UnknownRaceError"
+          return line
+        end
+        if category_check == category && year_input == year
+
+          hash = Hash[year, value]
+          line = line.merge(hash)
+        end
+      end
+    end
+    return line
   end
 
   def graduation_rate_by_year
@@ -531,11 +597,90 @@ class Enrollment
     return line.to_f.round(3)
   end
 
-  # def participation_by_race_or_ethnicity(race)
-  # end
+  def participation_by_race_or_ethnicity(race_input)
+    data = CSV.open "../headcount/data/Pupil enrollment by race_ethnicity.csv", headers: true, header_converters: :symbol
+    line = {}
+    hash = {}
+    race_input = race_input.to_s
+    data.each do |columns|
+      district  = columns[:location]
+      race      = columns[:race]
+      year      = columns[:timeframe]
+      stat_type = columns[:dataformat]
+      value     = columns[:data]
+      if district == "Colorado"
+        if race_input == "asian"
+          race_check = "Asian Students"
+        elsif
+          race_input == "black"
+            race_check = "Black Students"
+        elsif
+          race_input == "pacific_islander"
+            race_check = "Native Hawaiian or Other Pacific Islander"
+        elsif
+          race_input == "hispanic"
+            race_check = "Hispanic Students"
+        elsif
+          race_input == "native_american"
+            race_check = "Native American Students"
+        elsif
+          race_input == "two_or_more"
+            race_check = "Two or More race_inputs"
+        elsif
+          race_input == "white"
+            race_check = "White Students"
+        elsif
+          line = "UnknownRaceError"
+          return line
+        end
+        if race_check == race
+          hash = Hash[year, value]
+          line = line.merge(hash)
+        end
+      end
+    end
+    return line
+  end
   #
-  # def participation_by_race_or_ethnicity_in_year(year)
-  # end
+  def participation_by_race_or_ethnicity_in_year(year_input)
+    data = CSV.open "../headcount/data/Pupil enrollment by race_ethnicity.csv", headers: true, header_converters: :symbol
+    line = {}
+    hash = {}
+    year_input = year_input.to_s
+    data.each do |columns|
+      district  = columns[:location]
+      category  = columns[:race]
+      year      = columns[:timeframe]
+      stat_type = columns[:dataformat]
+      value     = columns[:data]
+      if district == "Colorado" && year == year_input
+        if category == "Asian Students"
+          category = category[0..4].downcase
+        elsif
+          category == "Black Students"
+            category = category[0..4].downcase
+        elsif
+          category == "Native Hawaiian or Other Pacific Islander"
+            category = category[25..40].downcase
+        elsif
+          category == "Hispanic Students"
+            category = category[0..7].downcase
+        elsif
+          category == "American Indian Students"
+            category = category[0..14].downcase
+        elsif
+          category == "Two or more races"
+            category = category[0..10].downcase
+        elsif
+          category == "White Students"
+            category = category[0..4].downcase
+        end
+        hash = Hash[category, value]
+        line = line.merge(hash)
+      end
+    end
+    return line
+  end
 
   def special_education_by_year
     data = CSV.open "../headcount/data/Special education.csv", headers: true, header_converters: :symbol
@@ -603,5 +748,7 @@ class Enrollment
     end
     return line.to_f.round(3)
   end
+end
 
+class AnalysisLayer
 end
