@@ -91,14 +91,12 @@ class EnrollmentTesting < Minitest::Test
   end
 
   def test_dropout_rate_for_race_or_ethnicity
-    skip
-    expected = {"asian"=>"0.016", "black"=>"0.044", "hispanic"=>"0.047", "native american"=>"0.054", "pacific islander"=>"0.038", "two or more"=>"0.017", "white"=>"0.019"}
+    expected = {"2011"=>"0.017", "2012"=>"0.016"}
     assert_equal expected, Enrollment.new({lunch_thing: 123}).dropout_rate_for_race_or_ethnicity(:asian)
   end
 
   def test_dropout_rate_for_race_or_ethnicity_in_year
-    skip
-    expected = {"asian"=>"0.016", "black"=>"0.044", "hispanic"=>"0.047", "native american"=>"0.054", "pacific islander"=>"0.038", "two or more"=>"0.017", "white"=>"0.019"}
+    expected = {"2012"=>"0.016"}
     assert_equal expected, Enrollment.new({lunch_thing: 123}).dropout_rate_for_race_or_ethnicity_in_year(:asian, 2012)
   end
 
@@ -142,6 +140,16 @@ class EnrollmentTesting < Minitest::Test
     assert_equal expected, Enrollment.new({lunch_thing: 123}).participation_in_year("2012")
   end
 
+  def test_participation_by_race_or_ethnicity
+    expected = {"2007"=>"0.034", "2008"=>"0.036", "2009"=>"0.037", "2010"=>"0.03", "2011"=>"0.03105", "2012"=>"27266", "2013"=>"26895", "2014"=>"27297"}
+    assert_equal expected, Enrollment.new({lunch_thing: 123}).participation_by_race_or_ethnicity(:asian)
+  end
+
+  def test_participation_by_race_or_ethnicity_in_year
+    expected = {"american indian"=>"6716", "asian"=>"27266", "black"=>"40496", "hispanic"=>"278619", "pacific islander"=>"1860", "two or more"=>"28238", "white"=>"480366", "Total"=>"863561"}
+    assert_equal expected, Enrollment.new({lunch_thing: 123}).participation_by_race_or_ethnicity_in_year(2012)
+  end
+
   def test_special_education_by_year
     expected = {"2009"=>"0.096", "2011"=>"0.097", "2012"=>"0.098", "2013"=>"0.10056", "2010"=>"0.096", "2014"=>"0.10079"}
     assert_equal expected, Enrollment.new({lunch_thing: 123}).special_education_by_year
@@ -161,6 +169,18 @@ class EnrollmentTesting < Minitest::Test
     expected = 0.4
     assert_equal expected, Enrollment.new({lunch_thing: 123}).remediation_in_year("2011")
   end
+end
 
+class AnalysisLayerTesting < Minitest::Test
 
+  def test_analysis_layer
+    assert AnalysisLayer
+  end
+
+  def test_initialize_dr
+    skip
+    path       = File.expand_path("../data", __dir__)
+    dr = DistrictRepository.from_csv(path)
+    assert_equal "", dr
+  end
 end
