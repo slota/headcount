@@ -111,7 +111,6 @@ class EconomicProfile
   end
 
   def free_or_reduced_lunch_in_year(year)
-    binding.pry
     @data.each do |columns|
       year      = year.to_s
       district  = columns[:location]
@@ -734,7 +733,6 @@ class Parser
    filepath = File.join(data_dir, 'districts.json')
    file = File.read(filepath)
    @data = CSV.open(file, :symbolize_names => true)
-   binding.pry
    parse_enrollment_data
    parse_economic_profile_data
   end
