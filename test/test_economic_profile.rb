@@ -8,15 +8,16 @@ class TestEconomicProfile < Minitest::Test
   # end
 
   def test_free_or_reduced_lunch_by_year
-    skip
     expected_result = {"2000"=>"0.27", "2001"=>"0.27528", "2002"=>"0.28509", "2003"=>"0.3", "2004"=>"0.3152", "2005"=>"0.3326", "2006"=>"0.337", "2007"=>"0.34", "2008"=>"0.3536", "2013"=>"0.41959", "2009"=>"0.3838",
                        "2010"=>"0.399", "2011"=>"0.4085", "2012"=>"0.416", "2014"=>"0.41593"}
     assert_equal expected_result, EconomicProfile.new({lunch_thing: 123}).free_or_reduced_lunch_by_year
   end
 
   def test_free_or_reduced_lunch_in_year
-    skip
-    assert_equal "0.34793", EconomicProfile.new({lunch_thing: 123})
+    path       = File.expand_path("../data", __dir__)
+    repository = DistrictRepository.from_csv(path)
+    district   = repository.find_by_name("ACADEMY 20")
+    assert_equal "0.34793", EconomicProfile.new(district)
                                            .free_or_reduced_lunch_in_year("2013")
   end
 
