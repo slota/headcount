@@ -10,9 +10,9 @@ end
 
   def proficient_by_grade(grade)
     if grade == 3
-      stats = CSV.open "../headcount/data/3rd grade students scoring proficient or above on the CSAP_TCAP.csv", headers: true, header_converters: :symbol
+      stats = CSV.open "#{@path}/3rd grade students scoring proficient or above on the CSAP_TCAP.csv", headers: true, header_converters: :symbol
     elsif grade == 8
-      stats = CSV.open "../headcount/data/8th grade students scoring proficient or above on the CSAP_TCAP.csv", headers: true, header_converters: :symbol
+      stats = CSV.open "#{@path}/8th grade students scoring proficient or above on the CSAP_TCAP.csv", headers: true, header_converters: :symbol
     end
     line = []
     return_lines = []
@@ -33,9 +33,9 @@ end
   end
 
   def proficient_by_race_or_ethnicity(race_input)
-    data_math    = CSV.open "../headcount/data/Average proficiency on the CSAP_TCAP by race_ethnicity_Math.csv", headers: true, header_converters: :symbol
-    data_reading = CSV.open "../headcount/data/Average proficiency on the CSAP_TCAP by race_ethnicity_Reading.csv", headers: true, header_converters: :symbol
-    data_writing = CSV.open "../headcount/data/Average proficiency on the CSAP_TCAP by race_ethnicity_Writing.csv", headers: true, header_converters: :symbol
+    data_math    = CSV.open "#{@path}/Average proficiency on the CSAP_TCAP by race_ethnicity_Math.csv", headers: true, header_converters: :symbol
+    data_reading = CSV.open "#{@path}/Average proficiency on the CSAP_TCAP by race_ethnicity_Reading.csv", headers: true, header_converters: :symbol
+    data_writing = CSV.open "#{@path}/Average proficiency on the CSAP_TCAP by race_ethnicity_Writing.csv", headers: true, header_converters: :symbol
     line = []
     return_lines = []
     stats.each do |columns|

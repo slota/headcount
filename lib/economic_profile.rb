@@ -10,7 +10,7 @@ class EconomicProfile
 
   def free_or_reduced_lunch_by_year
     line = {}
-    stats = CSV.open "../headcount/data/Students qualifying for free or reduced price lunch.csv", headers: true, header_converters: :symbol
+    stats = CSV.open "#{@path}/Students qualifying for free or reduced price lunch.csv", headers: true, header_converters: :symbol
     stats.each do |columns|
       district  = columns[:location]
       poverty   = columns[:poverty_level]
@@ -46,7 +46,7 @@ class EconomicProfile
   def school_aged_children_in_poverty_by_year
     line = {}
     return_lines = []
-    stats = CSV.open "../headcount/data/School-aged children in poverty.csv", headers: true, header_converters: :symbol
+    stats = CSV.open "#{@path}/School-aged children in poverty.csv", headers: true, header_converters: :symbol
     stats.each do |columns|
       district  = columns[:location]
       stat_year = columns[:timeframe]
@@ -63,7 +63,7 @@ class EconomicProfile
   def school_aged_children_in_poverty_in_year(year)
     line = []
     return_lines = []
-    stats = CSV.open "../headcount/data/School-aged children in poverty.csv", headers: true, header_converters: :symbol
+    stats = CSV.open "#{@path}/School-aged children in poverty.csv", headers: true, header_converters: :symbol
     stats.each do |columns|
       district  = columns[:location]
       stat_year = columns[:timeframe]
@@ -79,7 +79,7 @@ class EconomicProfile
   def title_1_students_by_year
     line = {}
     return_lines = []
-    stats = CSV.open "../headcount/data/Title I students.csv", headers: true, header_converters: :symbol
+    stats = CSV.open "#{@path}/Title I students.csv", headers: true, header_converters: :symbol
     stats.each do |columns|
       district  = columns[:location]
       stat_year = columns[:timeframe]
@@ -96,7 +96,7 @@ class EconomicProfile
   def title_1_students_in_year(year)
     line = {}
     return_lines = []
-    stats = CSV.open "../headcount/data/Title I students.csv", headers: true, header_converters: :symbol
+    stats = CSV.open "#{@path}/Title I students.csv", headers: true, header_converters: :symbol
     stats.each do |columns|
       district  = columns[:location]
       stat_year = columns[:timeframe]

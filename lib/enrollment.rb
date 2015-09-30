@@ -9,7 +9,7 @@ class Enrollment
   end
 
   def dropout_rate_in_year(year_input)
-    data = CSV.open "../headcount/data/Dropout rates by race and ethnicity.csv", headers: true, header_converters: :symbol
+    data = CSV.open "#{@path}/Dropout rates by race and ethnicity.csv", headers: true, header_converters: :symbol
     line = ""
     data.each do |columns|
       district  = columns[:location]
@@ -28,7 +28,7 @@ class Enrollment
     if year_input.to_s.length != 4
       return nil
     end
-    data = CSV.open "../headcount/data/Dropout rates by race and ethnicity.csv", headers: true, header_converters: :symbol
+    data = CSV.open "#{@path}/Dropout rates by race and ethnicity.csv", headers: true, header_converters: :symbol
     line = {}
     hash = {}
     data.each do |columns|
@@ -57,7 +57,7 @@ class Enrollment
     if year_input.to_s.length != 4
       return nil
     end
-    data = CSV.open "../headcount/data/Dropout rates by race and ethnicity.csv", headers: true, header_converters: :symbol
+    data = CSV.open "#{@path}/Dropout rates by race and ethnicity.csv", headers: true, header_converters: :symbol
     line = {}
     hash = {}
     data.each do |columns|
@@ -103,7 +103,7 @@ class Enrollment
     if race == :wat
       raise UnknownRaceError
     end
-    data = CSV.open "../headcount/data/Dropout rates by race and ethnicity.csv", headers: true, header_converters: :symbol
+    data = CSV.open "#{@path}/Dropout rates by race and ethnicity.csv", headers: true, header_converters: :symbol
     line = {}
     hash = {}
     race = race.to_s
@@ -156,7 +156,7 @@ class Enrollment
       raise UnknownRaceError
     end
 
-    data = CSV.open "../headcount/data/Dropout rates by race and ethnicity.csv", headers: true, header_converters: :symbol
+    data = CSV.open "#{@path}/Dropout rates by race and ethnicity.csv", headers: true, header_converters: :symbol
     line = {}
     if year_input.to_s.length != 4
       return line
@@ -204,7 +204,7 @@ class Enrollment
   end
 
   def graduation_rate_by_year
-    data = CSV.open "../headcount/data/High school graduation rates.csv", headers: true, header_converters: :symbol
+    data = CSV.open "#{@path}/High school graduation rates.csv", headers: true, header_converters: :symbol
     line = {}
     hash = {}
     data.each do |columns|
@@ -221,7 +221,7 @@ class Enrollment
   end
 
   def graduation_rate_in_year(year_input)
-    data = CSV.open "../headcount/data/High school graduation rates.csv", headers: true, header_converters: :symbol
+    data = CSV.open "#{@path}/High school graduation rates.csv", headers: true, header_converters: :symbol
     line = {}
     hash = {}
     data.each do |columns|
@@ -240,7 +240,7 @@ class Enrollment
   end
 
   def kindergarten_participation_by_year
-    data = CSV.open "../headcount/data/Kindergartners in full-day program.csv", headers: true, header_converters: :symbol
+    data = CSV.open "#{@path}/Kindergartners in full-day program.csv", headers: true, header_converters: :symbol
     line = {}
     hash = {}
     data.each do |columns|
@@ -260,7 +260,7 @@ class Enrollment
     if year_input.to_s.length > 4
       return nil
     end
-    data = CSV.open "../headcount/data/Kindergartners in full-day program.csv", headers: true, header_converters: :symbol
+    data = CSV.open "#{@path}/Kindergartners in full-day program.csv", headers: true, header_converters: :symbol
     line = {}
     hash = {}
     data.each do |columns|
@@ -277,7 +277,7 @@ class Enrollment
   end
 
   def online_participation_by_year
-    data = CSV.open "../headcount/data/Online pupil enrollment.csv", headers: true, header_converters: :symbol
+    data = CSV.open "#{@path}/Online pupil enrollment.csv", headers: true, header_converters: :symbol
     line = {}
     hash = {}
     data.each do |columns|
@@ -297,7 +297,7 @@ class Enrollment
     if year_input.to_s.length > 4
       return nil
     end
-    data = CSV.open "../headcount/data/Online pupil enrollment.csv", headers: true, header_converters: :symbol
+    data = CSV.open "#{@path}/Online pupil enrollment.csv", headers: true, header_converters: :symbol
     line = {}
     hash = {}
     data.each do |columns|
@@ -313,7 +313,7 @@ class Enrollment
   end
 
   def participation_by_year
-    data = CSV.open "../headcount/data/Pupil enrollment.csv", headers: true, header_converters: :symbol
+    data = CSV.open "#{@path}/Pupil enrollment.csv", headers: true, header_converters: :symbol
     line = {}
     hash = {}
     data.each do |columns|
@@ -333,7 +333,7 @@ class Enrollment
     if year_input.to_s.length > 4
       return nil
     end
-    data = CSV.open "../headcount/data/Pupil enrollment.csv", headers: true, header_converters: :symbol
+    data = CSV.open "#{@path}/Pupil enrollment.csv", headers: true, header_converters: :symbol
     line = {}
     data.each do |columns|
       district  = columns[:location]
@@ -351,7 +351,7 @@ class Enrollment
     if race_input == :wat
       raise UnknownRaceError
     end
-    data = CSV.open "../headcount/data/Pupil enrollment by race_ethnicity.csv", headers: true, header_converters: :symbol
+    data = CSV.open "#{@path}/Pupil enrollment by race_ethnicity.csv", headers: true, header_converters: :symbol
     line = {}
     hash = {}
     race_input = race_input.to_s
@@ -403,7 +403,7 @@ class Enrollment
     if year_input.to_s.length > 4
       return nil
     end
-    data = CSV.open "../headcount/data/Pupil enrollment by race_ethnicity.csv", headers: true, header_converters: :symbol
+    data = CSV.open "#{@path}/Pupil enrollment by race_ethnicity.csv", headers: true, header_converters: :symbol
     line = {}
     hash = {}
     year_input = year_input.to_s
@@ -445,7 +445,7 @@ class Enrollment
 
 
   def special_education_by_year
-    data = CSV.open "../headcount/data/Special education.csv", headers: true, header_converters: :symbol
+    data = CSV.open "#{@path}/Special education.csv", headers: true, header_converters: :symbol
     line = {}
     hash = {}
     data.each do |columns|
@@ -465,7 +465,7 @@ class Enrollment
     if input_year.to_s.length > 4
       return nil
     end
-    data = CSV.open "../headcount/data/Special education.csv", headers: true, header_converters: :symbol
+    data = CSV.open "#{@path}/Special education.csv", headers: true, header_converters: :symbol
     line = {}
     hash = {}
     data.each do |columns|
@@ -481,7 +481,7 @@ class Enrollment
   end
 
   def remediation_by_year
-    data = CSV.open "../headcount/data/Remediation in higher education.csv", headers: true, header_converters: :symbol
+    data = CSV.open "#{@path}/Remediation in higher education.csv", headers: true, header_converters: :symbol
     line = {}
     hash = {}
     data.each do |columns|
@@ -501,7 +501,7 @@ class Enrollment
     if input_year.to_s.length > 4
       return nil
     end
-    data = CSV.open "../headcount/data/Remediation in higher education.csv", headers: true, header_converters: :symbol
+    data = CSV.open "#{@path}/Remediation in higher education.csv", headers: true, header_converters: :symbol
     line = {}
     hash = {}
     data.each do |columns|
