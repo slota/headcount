@@ -11,8 +11,7 @@ class DistrictRepository
       district.fetch(:location)
     end
     # district_data = data.map { |row| [row.fetch(:location).upcase, {}]}.to_h
-    DistrictRepository.new(district_data)
-
+    DistrictRepository.new(district_data, path)
   end
 
   # def initialize(districts_data = self.from_csv)
@@ -21,13 +20,13 @@ class DistrictRepository
   #   }.to_h
   # end
 
-  def initialize(districts_data)
-    @districts_by_name = clean_up_districts(districts_data)
+  def initialize(districts_data, path)
+    @districts_by_name = clean_up_districts(districts_data, path)
   end
 
-  def clean_up_districts(districts_data)
+  def clean_up_districts(districts_data, path)
     districts_data.map { |location, district_data|
-      [location.upcase, District.new(location.upcase, district_data)]
+      [location.upcase, District.new(location.upcase, district_data, path)]
     }.to_h
   end
 

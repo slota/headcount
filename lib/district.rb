@@ -8,11 +8,11 @@ class District
 
   attr_accessor :economic_profile, :statewide_testing, :enrollment, :name
 
-  def initialize(name, data)
+  def initialize(name, data, path)
     @name = name
-    @economic_profile  = EconomicProfile.new(data)
-    @statewide_testing = StatewideTesting.new(data)
-    @enrollment        = Enrollment.new(data)
+    @economic_profile  = EconomicProfile.new(data, path)
+    @statewide_testing = StatewideTesting.new(data, path)
+    @enrollment        = Enrollment.new(data, path)
   end
 
 end

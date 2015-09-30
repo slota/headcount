@@ -3,13 +3,13 @@ require 'csv'
 
 class EconomicProfile
 
-  def initialize(data)
+  def initialize(data, path)
     @data = data
+    @path = path
   end
 
   def free_or_reduced_lunch_by_year
-    line = []
-    return_lines = []
+    line = {}
     stats = CSV.open "../headcount/data/Students qualifying for free or reduced price lunch.csv", headers: true, header_converters: :symbol
     stats.each do |columns|
       district  = columns[:location]
@@ -17,17 +17,18 @@ class EconomicProfile
       stat_year = columns[:timeframe]
       stat_type = columns[:dataformat]
       value     = columns[:data]
-      if stat_type == "Percent" && district == "Colorado" && poverty == "Eligible for Free or Reduced Lunch"
-        line << stat_year
-        line << value
-        return_lines << line
-        line = []
+      if stat_type == "Percent" && district == "ACADEMY 20" && poverty == "Eligible for Free or Reduced Lunch"
+        hash = Hash[stat_year.to_i, (value.to_f * 1000).to_i / 1000.0]
+        line = line.merge(hash)
       end
     end
-    return return_lines.to_h
+    return line
   end
 
   def free_or_reduced_lunch_in_year(year)
+    if year.to_s.length > 4
+      return nil
+    end
     @data.each do |columns|
       year      = year.to_s
       district  = columns[:location]

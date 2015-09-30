@@ -3,9 +3,10 @@ require 'pry'
 
 class StatewideTesting
 
-  def initialize(data)
-    @data = data
-  end
+  def initialize(data, path)
+  @data = data
+  @path = path
+end
 
   def proficient_by_grade(grade)
     if grade == 3
