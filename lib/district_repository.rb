@@ -36,6 +36,10 @@ class DistrictRepository
   end
 
   def find_all_matching(name)
+    @districts_by_name.select{|dist, val|
+      if dist.include?(name.upcase)
+        val
+      end
+    }.values.to_a
   end
-
 end
