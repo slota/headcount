@@ -6,7 +6,7 @@ require_relative 'enrollment'
 
 class District
 
-  attr_accessor :economic_profile, :statewide_testing, :enrollment, :save_name
+  attr_accessor :economic_profile, :statewide_testing, :enrollment, :name
 
   def initialize(name, data)
     @name = name

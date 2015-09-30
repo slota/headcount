@@ -75,22 +75,22 @@ class Enrollment
         category = category[0..4].downcase
       elsif
         category == "Black Students"
-          category = category[0..4].downcase
+        category = category[0..4].downcase
       elsif
         category == "Native Hawaiian or Other Pacific Islander"
-          category = "pacific_islander"
+        category = "pacific_islander"
       elsif
         category == "Hispanic Students"
-          category = category[0..7].downcase
+        category = category[0..7].downcase
       elsif
         category == "Native American Students"
-          category = "native_american"
+        category = "native_american"
       elsif
         category == "Two or More Races"
-          category = "two_or_more"
+        category = "two_or_more"
       elsif
         category == "White Students"
-          category = category[0..4].downcase
+        category = category[0..4].downcase
       end
       hash = Hash[category.to_sym, (value.to_f * 1000).to_i / 1000.0]
       line = line.merge(hash)
@@ -143,58 +143,57 @@ class Enrollment
     end
     return line
   end
-end
 
-
-def dropout_rate_for_race_or_ethnicity_in_year(race, year_input)
-  if year_input.to_s.length != 4
-    return nil
-  end
-  if race.to_s == "lksdjsdlkjf"
-    return UnknownRaceError
-  end
-  data = CSV.open "../headcount/data/Dropout rates by race and ethnicity.csv", headers: true, header_converters: :symbol
-  line = {}
-  hash = {}
-  race = race.to_s
-  year_input = year_input.to_s
-  data.each do |columns|
-    district  = columns[:location]
-    category  = columns[:category]
-    year      = columns[:timeframe]
-    stat_type = columns[:dataformat]
-    value     = columns[:data]
-    if district == "ACADEMY 20"
-      if race == "asian"
-        category_check = "Asian Students"
-      elsif
-        race == "black"
-        category_check = "Black Students"
-      elsif
-        race == "pacific_islander"
-        category_check = "Native Hawaiian or Other Pacific Islander"
-      elsif
-        race == "hispanic"
-        category_check = "Hispanic Students"
-      elsif
-        race == "native_american"
-        category_check = "Native American Students"
-      elsif
-        race == "two_or_more"
-        category_check = "Two or More Races"
-      elsif
-        race == "white"
-        category_check = "White Students"
-      elsif
-        line == "UnknownRaceError"
-        return line
-      end
-      if category_check == category && year_input == year
-        line = (value.to_f * 1000).to_i / 1000.0
+  def dropout_rate_for_race_or_ethnicity_in_year(race, year_input)
+    if year_input.to_s.length != 4
+      return nil
+    end
+    if race.to_s == "lksdjsdlkjf"
+      return UnknownRaceError
+    end
+    data = CSV.open "../headcount/data/Dropout rates by race and ethnicity.csv", headers: true, header_converters: :symbol
+    line = {}
+    hash = {}
+    race = race.to_s
+    year_input = year_input.to_s
+    data.each do |columns|
+      district  = columns[:location]
+      category  = columns[:category]
+      year      = columns[:timeframe]
+      stat_type = columns[:dataformat]
+      value     = columns[:data]
+      if district == "ACADEMY 20"
+        if race == "asian"
+          category_check = "Asian Students"
+        elsif
+          race == "black"
+          category_check = "Black Students"
+        elsif
+          race == "pacific_islander"
+          category_check = "Native Hawaiian or Other Pacific Islander"
+        elsif
+          race == "hispanic"
+          category_check = "Hispanic Students"
+        elsif
+          race == "native_american"
+          category_check = "Native American Students"
+        elsif
+          race == "two_or_more"
+          category_check = "Two or More Races"
+        elsif
+          race == "white"
+          category_check = "White Students"
+        elsif
+          line == "UnknownRaceError"
+          return line
+        end
+        if category_check == category && year_input == year
+          line = (value.to_f * 1000).to_i / 1000.0
+        end
       end
     end
+    return line
   end
-  return line
 
   def dropout_rate_for_race_or_ethnicity_in_year(race, year_input)
     data = CSV.open "../headcount/data/Dropout rates by race and ethnicity.csv", headers: true, header_converters: :symbol

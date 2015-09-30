@@ -34,8 +34,6 @@ class DistrictRepository
   def find_by_name(name)
     @save_name = name
     @districts_by_name.fetch(name.upcase)
-    @name = name
-    @districts_by_name[name.upcase]
   end
 
   def find_all_matching(name)
