@@ -1,30 +1,44 @@
 require 'csv'
 require 'pry'
 require 'district'
-require 'economic_profile'
 
 class DistrictRepository
 
-  attr_reader :data
+  def self.from_csv(path)
 
-  def initialize(data)
-    @district = District.new(data)
-    binding.pry
+    data = (CSV.open "#{path}/Students qualifying for free or reduced price lunch.csv", headers: true, header_converters: :symbol).map(&:to_h)
+    district_data = data.group_by do |district|
+      district.fetch(:location)
+    end
+    # district_data = data.map { |row| [row.fetch(:location).upcase, {}]}.to_h
+    DistrictRepository.new(district_data)
+
   end
 
-  def self.from_csv(path)
-    data = CSV.open "data", headers: true
-    # sqfforpl_contents.each do |row|
-    #   puts row
-    # end
-    # @find_by_name = find_by_name(name)
-    DistrictRepository.new(data)
+  # def initialize(districts_data = self.from_csv)
+  #   @districts_by_name = districts_data.map { |name, district_data|
+  #     [name.upcase, District.new(name, district_data)]
+  #   }.to_h
+  # end
+
+  def initialize(districts_data)
+    @districts_by_name = clean_up_districts(districts_data)
+  end
+
+  def clean_up_districts(districts_data)
+    districts_data.map { |location, district_data|
+      [location.upcase, District.new(location, district_data)]
+    }.to_h
   end
 
   def find_by_name(name)
-
-    @district.find_by_name(name)
+    @save_name = name
+    @districts_by_name.fetch(name.upcase)
+    @name = name
+    @districts_by_name[name.upcase]
   end
 
+  def find_all_matching(name)
+  end
 
 end

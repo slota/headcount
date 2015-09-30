@@ -1,1 +1,1 @@
-require_relative 'economic_profile'
+require_relative 'district_repository'

@@ -1,6 +1,7 @@
 require 'pry'
 require 'minitest/test'
-require './lib/economic_profile'
+require_relative '../lib/economic_profile'
+require_relative '../lib/district_repository'
 
 class TestEconomicProfile < Minitest::Test
   # def csv_data

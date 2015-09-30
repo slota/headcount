@@ -1,27 +1,18 @@
 require 'csv'
 require 'pry'
-require 'economic_profile'
+require_relative 'economic_profile'
+require_relative 'statewide_testing'
+require_relative 'enrollment'
 
 class District
 
-  attr_reader :data
+  attr_accessor :economic_profile, :statewide_testing, :enrollment, :save_name
 
-  def initialize(data)
-    @data = data
+  def initialize(name, data)
+    @name = name
+    @economic_profile  = EconomicProfile.new(data)
+    @statewide_testing = StatewideTesting.new(data)
+    @enrollment        = Enrollment.new(data)
   end
-
-  def self.from_csv(path)
-    data = CSV.open "data", headers: true
-    # sqfforpl_contents.each do |row|
-    #   puts row
-    # end
-    # @find_by_name = find_by_name(name)
-    DistrictRepository.new(data)
-  end
-
-  def find_by_name(name)
-    @economic_profile = EconomicProfile.new(name)
-  end
-
 
 end
