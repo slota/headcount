@@ -27,12 +27,12 @@ class DistrictRepository
 
   def clean_up_districts(districts_data)
     districts_data.map { |location, district_data|
-      [location.upcase, District.new(location, district_data)]
+      [location.upcase, District.new(location.upcase, district_data)]
     }.to_h
   end
 
   def find_by_name(name)
-    @save_name = name
+    # @save_name = name
     @districts_by_name.fetch(name.upcase)
   end
 
