@@ -52,7 +52,7 @@ class EconomicProfile
       stat_year = columns[:timeframe]
       stat_type = columns[:dataformat]
       value     = columns[:data]
-      if stat_type == "Percent" && district == "ACADEMY 20"
+      if stat_type == "Percent" && district == @data.fetch(1)[:location]
         hash = Hash[stat_year.to_i, (value.to_f * 1000).to_i / 1000.0]
         line = line.merge(hash)
       end

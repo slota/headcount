@@ -32,10 +32,14 @@ class DistrictRepository
 
   def find_by_name(name)
     # @save_name = name
+    if @districts_by_name.keys.include?(name.upcase) == false
+      return nil
+    end
     @districts_by_name.fetch(name.upcase)
   end
 
   def find_all_matching(name)
+
   end
 
 end
