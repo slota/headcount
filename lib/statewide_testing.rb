@@ -43,7 +43,7 @@ class StatewideTesting
 
   def proficient_by_race_or_ethnicity(race_input)
     if race_input.to_s != "asian" && race_input.to_s != "black" && race_input.to_s != "pacific_islander" && race_input.to_s != "hispanic" && race_input.to_s != "native_american" && race_input.to_s != "two_or_more" && race_input.to_s != "white"
-     raise UnknownDataError
+     raise UnknownRaceError
    end
     data_math    = CSV.open "#{@path}/Average proficiency on the CSAP_TCAP by race_ethnicity_Math.csv", headers: true, header_converters: :symbol
     data_reading = CSV.open "#{@path}/Average proficiency on the CSAP_TCAP by race_ethnicity_Reading.csv", headers: true, header_converters: :symbol
@@ -85,7 +85,7 @@ class StatewideTesting
     elsif subject  == :writing
       stats = writing
     else
-      raise UnknownDataError
+      raise UnknownRaceError
     end
     line = []
     return_lines = []
@@ -112,5 +112,11 @@ end
 class UnknownDataError < StandardError
   def message
     "data issues"
+  end
+end
+
+class UnknownRaceError < StandardError
+  def message
+    "race issues"
   end
 end
