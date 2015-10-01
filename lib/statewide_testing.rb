@@ -1,17 +1,24 @@
 require 'csv'
 require 'pry'
 
+class UnknownDataError < StandardError
+  def message
+    "data issues"
+  end
+end
+
+class UnknownRaceError < StandardError
+  def message
+    "race issues"
+  end
+end
+
 class StatewideTesting
   def initialize(data, path = "1")
     @data = data
     @path = path
   end
 
-  # def proficient_by_grade(grade)
-  #   stats = CSV.open('../headcount/data/3rd grade students scoring proficient or above on the
-  #   CSAP_TCAP.csv', headers: true, header_converters: :symbol)
-  #   binding.pry
-  # end
   def proficient_by_grade(grade)
      if grade != 3 && grade != 8
        raise UnknownDataError
@@ -56,7 +63,7 @@ class StatewideTesting
       year      = columns[:timeframe]
       stat_type = columns[:dataformat]
       value     = columns[:data]
-      if race_input == "Percent" && district == "Colorad"
+      if race_input == "Percent" && district == "Colorado"
         line << year
         line << value
         return_lines << line
@@ -67,7 +74,34 @@ class StatewideTesting
   end
 
   def proficient_for_subject_by_grade_in_year(subject, grade, year)
-    0.857
+    if grade != 3 && grade != 8
+      raise UnknownDataError
+    end
+    unless subject == :math || subject == :reading || subject == :writing
+      raise UnknownDataError
+    end
+    to_return = {}
+    statsthree = CSV.open "#{@path}/3rd grade students scoring proficient or above on the CSAP_TCAP.csv", headers: true, header_converters: :symbol
+    statseight = CSV.open "#{@path}/8th grade students scoring proficient or above on the CSAP_TCAP.csv", headers: true, header_converters: :symbol
+    if grade == 3
+      stats = statsthree
+    elsif grade == 8
+      stats = statseight
+    end
+    stats.each do |row|
+      district  = row[:location]
+      score     = row[:score].downcase.to_sym
+      year      = row[:timeframe].to_i
+      stat_type = row[:dataformat]
+      value     = row[:data]
+      if value != "#VALUE!" && value != "N/A" && value != nil && value != "LNE"
+        to_return[year] ||= {}
+        if stat_type == "Percent" && district == @data.fetch(1)[:location] && value != 0
+          to_return[year][score] = (value.to_f * 1000).to_i / 1000.0
+        end
+      end
+    end
+    to_return.reject { |key, value| value.empty? }
   end
 
   def proficient_for_subject_by_race_in_year(subject, race, year)
@@ -95,7 +129,7 @@ class StatewideTesting
       date      = columns[:timeframe]
       stat_type = columns[:dataformat]
       value     = columns[:data]
-      if year == nil
+      if (date == year && stats == subject).nil?
         raise UnknownDataError
       end
       if stat_type == "Percent" && district == @data.fetch(1)[:location] && date == year.to_s
@@ -107,16 +141,4 @@ class StatewideTesting
     return return_lines.first.first.to_f.round(3)
   end
 
-end
-
-class UnknownDataError < StandardError
-  def message
-    "data issues"
-  end
-end
-
-class UnknownRaceError < StandardError
-  def message
-    "race issues"
-  end
 end

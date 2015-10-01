@@ -10,15 +10,8 @@ class DistrictRepository
     district_data = data.group_by do |district|
       district.fetch(:location)
     end
-    # district_data = data.map { |row| [row.fetch(:location).upcase, {}]}.to_h
     DistrictRepository.new(district_data, path)
   end
-
-  # def initialize(districts_data = self.from_csv)
-  #   @districts_by_name = districts_data.map { |name, district_data|
-  #     [name.upcase, District.new(name, district_data)]
-  #   }.to_h
-  # end
 
   def initialize(districts_data, path)
     @districts_by_name = clean_up_districts(districts_data, path)
@@ -31,7 +24,6 @@ class DistrictRepository
   end
 
   def find_by_name(name)
-    # @save_name = name
     if @districts_by_name.keys.include?(name.upcase) == false
       return nil
     end

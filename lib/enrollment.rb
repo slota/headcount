@@ -1,6 +1,12 @@
 require 'csv'
 require 'pry'
 
+class UnknownRaceError < StandardError
+  def message
+    "race issues"
+  end
+end
+
 class Enrollment
 
   def initialize(data, path)
@@ -66,7 +72,6 @@ class Enrollment
       year      = columns[:timeframe]
       stat_type = columns[:dataformat]
       value     = columns[:data]
-      # if district == "ACADEMY 20" && year == year_input.to_s
       if district == "ACADEMY 20"
         if category == "Asian Students" || category == "Black Students" || category == "Native Hawaiian or Other Pacific Islander" || category == "Hispanic Students" || category == "Native American Students" || category == "Two or More Races" || category == "White Students"
           if category == "Asian Students"
@@ -268,7 +273,6 @@ class Enrollment
       year      = columns[:timeframe]
       stat_type = columns[:dataformat]
       value     = columns[:data]
-
       if district == "ACADEMY 20" && year_input == year.to_i
         line = (value.to_f * 1000).to_i / 1000.0
       end
@@ -394,11 +398,7 @@ class Enrollment
     end
     return line
   end
-  # def participation_by_race_or_ethnicity(race)
-  # end
 
-
-  #
   def participation_by_race_or_ethnicity_in_year(year_input)
     if year_input.to_s.length > 4
       return nil
@@ -441,8 +441,6 @@ class Enrollment
     end
     return line
   end
-  # def participation_by_race_or_ethnicity_in_year(year)
-
 
   def special_education_by_year
     data = CSV.open "#{@path}/Special education.csv", headers: true, header_converters: :symbol
@@ -514,11 +512,5 @@ class Enrollment
       end
     end
     return line
-  end
-end
-
-class UnknownRaceError < StandardError
-  def message
-    "race issues"
   end
 end
